@@ -1,0 +1,153 @@
+@font-face {
+  font-family: 'SOGEFI-NAF-icons';
+  src:  url('fonts/SOGEFI-NAF-icons.eot?gy2f4a');
+  src:  url('fonts/SOGEFI-NAF-icons.eot?gy2f4a#iefix') format('embedded-opentype'),
+    url('fonts/SOGEFI-NAF-icons.ttf?gy2f4a') format('truetype'),
+    url('fonts/SOGEFI-NAF-icons.woff?gy2f4a') format('woff'),
+    url('fonts/SOGEFI-NAF-icons.svg?gy2f4a#SOGEFI-NAF-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon_sirene {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'SOGEFI-NAF-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.NAF_A:before {
+  content: "\e900";
+}
+.NAF_B:before {
+  content: "\e901";
+}
+.NAF_C:before {
+  content: "\e902";
+}
+.NAF_D:before {
+  content: "\e903";
+}
+.NAF_E:before {
+  content: "\e904";
+}
+.NAF_F:before {
+  content: "\e905";
+}
+.NAF_G:before {
+  content: "\e906";
+}
+.NAF_H:before {
+  content: "\e907";
+}
+.NAF_I:before {
+  content: "\e908";
+}
+.NAF_J:before {
+  content: "\e909";
+}
+.NAF_K:before {
+  content: "\e90a";
+}
+.NAF_L:before {
+  content: "\e90b";
+}
+.NAF_M:before {
+  content: "\e90c";
+}
+.NAF_N:before {
+  content: "\e90d";
+}
+.NAF_O:before {
+  content: "\e90e";
+}
+.NAF_P:before {
+  content: "\e90f";
+}
+.NAF_Q:before {
+  content: "\e910";
+}
+.NAF_R:before {
+  content: "\e911";
+}
+.NAF_S:before {
+  content: "\e912";
+}
+.NAF_T:before {
+  content: "\e913";
+}
+.NAF_U:before {
+  content: "\e914";
+}
+
+.icon_sirene-NAF_A:before {
+  content: "\e900";
+}
+.icon_sirene-NAF_B:before {
+  content: "\e901";
+}
+.icon_sirene-NAF_C:before {
+  content: "\e902";
+}
+.icon_sirene-NAF_D:before {
+  content: "\e903";
+}
+.icon_sirene-NAF_E:before {
+  content: "\e904";
+}
+.icon_sirene-NAF_F:before {
+  content: "\e905";
+}
+.icon_sirene-NAF_G:before {
+  content: "\e906";
+}
+.icon_sirene-NAF_H:before {
+  content: "\e907";
+}
+.icon_sirene-NAF_I:before {
+  content: "\e908";
+}
+.icon_sirene-NAF_J:before {
+  content: "\e909";
+}
+.icon_sirene-NAF_K:before {
+  content: "\e90a";
+}
+.icon_sirene-NAF_L:before {
+  content: "\e90b";
+}
+.icon_sirene-NAF_M:before {
+  content: "\e90c";
+}
+.icon_sirene-NAF_N:before {
+  content: "\e90d";
+}
+.icon_sirene-NAF_O:before {
+  content: "\e90e";
+}
+.icon_sirene-NAF_P:before {
+  content: "\e90f";
+}
+.icon_sirene-NAF_Q:before {
+  content: "\e910";
+}
+.icon_sirene-NAF_R:before {
+  content: "\e911";
+}
+.icon_sirene-NAF_S:before {
+  content: "\e912";
+}
+.icon_sirene-NAF_T:before {
+  content: "\e913";
+}
+.icon_sirene-NAF_U:before {
+  content: "\e914";
+}

@@ -1,0 +1,455 @@
+/**************************bordur**************************/
+
+#map, .checkBackground {
+  border : solid 1px black;
+  height: 834px;
+}
+
+.material-icons{
+  vertical-align: middle !important;
+}
+
+
+/**************************Ecart div**************************/
+.entete {
+  margin-top: 10px;
+  display: none;
+}
+
+
+/**************************Chekbox**************************/
+
+.gj-checkbox-md input[type=checkbox]:checked+span:after {
+  color: #FFF;
+  background-color: #F8C45E;
+  position: absolute;
+  left: 1px;
+  top: -15px;
+}
+
+.gj-checkbox-md input[type=checkbox]:checked+span {
+  border: 2px solid #F8C45E;
+}
+
+
+/**************************Label**************************/
+
+input[type=text]:not(.browser-default):focus:not([readonly]), input[type=text].valid:not(.browser-default) {
+  border-bottom: 1px solid #E06556;
+  box-shadow: none;
+}
+
+input:-internal-autofill-selected {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+  text-align: center;
+  text-transform: uppercase;
+  float: initial;
+
+}
+
+.dataTables_wrapper .dataTables_filter  {
+  float: left;
+  text-align: center;
+}
+
+label {
+  color: #E06556 !important;
+}
+
+input[type=search]:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #E06556;
+  box-shadow: none;
+  color: black;
+}
+
+
+/*************************Button*************************/
+
+.fullSize {
+  width: 100%;
+  background-color: #616161;
+}
+
+.fullSize:hover {
+  background-color: #878383;
+}
+
+.fullSize:focus {
+  background-color: #505050;
+}
+
+#buttonCartho, #btnExportCSV {
+  background-color: #6997a6 !important;
+}
+
+#clearButton{
+  background-color: #E06556 !important;
+}
+
+.groupeButton {
+  margin-left: 4px !important;
+  margin-bottom: 10px !important;
+  display: none;
+}
+
+#clearButtonAfter {
+  display: none;
+  background-color: #E06556;
+  float: left;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
+/**************************Input**************************/
+
+.small_info {
+  font-size: 10px;
+}
+
+.colorLabel {
+  color: #E06556 !important;
+}
+
+.input-field  {
+  position: relative;
+  margin-top: 0.3rem;
+}
+
+
+/**************************Select**************************/
+
+.dropdown-content li>a, .dropdown-content li>span {
+  font-size: 16px;
+  color: #616161;
+  display: block;
+  line-height: 22px;
+  padding: 14px 16px;
+}
+
+.select-wrapper {
+    position: relative;
+    z-index: 9999;
+}
+
+/**************************Arbre**************************/
+
+#tree{
+  overflow-y: auto;
+  height: 724px;
+}
+
+.arbre_checkbox{
+  display: none;
+  padding-left: 4px;
+}
+
+/**************************Carte et Légende**************************/
+
+#legende {
+  display: none;
+  position: absolute;
+  z-index: 9999;
+  padding-top: 92px;
+  padding-left: 5px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: #fff;
+  margin-left: 1px;
+  margin-top: 1px;
+  height: 832px;
+}
+
+#A {
+  color : #539A1D;
+}
+
+#B {
+  color : #0E4021;
+}
+
+#C {
+  color : #258226;
+}
+
+#D {
+  color : #214BA9;
+}
+
+#E {
+  color : #3D99D9;
+}
+
+#F {
+  color : #C6220D;
+}
+
+#G {
+  color : #881D1E;
+}
+
+#H {
+  color : #201C1D;
+}
+
+#I {
+  color : #E99900;
+}
+
+#J {
+  color : #C4230D;
+}
+
+#K {
+  color : #A63384;
+}
+
+#L {
+  color : #1F4056;
+}
+
+#M {
+  color : #E57E00;
+}
+
+#N {
+  color : #35224A;
+}
+
+#O {
+  color : #6AA927;
+}
+
+#P {
+  color : #F0B100;
+}
+
+#Q {
+  color : #962777;
+}
+
+#R {
+  color : #3C96D7;
+}
+
+#S {
+  color : #9B3235;
+}
+
+#T {
+  color : #231F20;
+}
+
+#U {
+  color : rgba(#d9d1d1, 0.96);
+}
+
+/*enleve bordure zoom et autre layers*/
+.leaflet-control-layers-base [type="radio"]:not(:checked), [type="radio"]:checked {
+  position: relative;
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+}
+.leaflet-control-layers-base label {
+  font-size: 0.9rem;
+  color: #000000;
+  line-height: 1.7rem;
+}
+.leaflet-control-layers-overlays [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+  left: 0;
+  visibility: visible;
+}
+.leaflet-control-layers-overlays label {
+  font-size: 0.9rem;
+  color: #000000;
+  line-height: 1.7rem;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  border: 0;
+}
+.leaflet-control-layers {
+  border-radius: 0px;
+}
+.leaflet-bar a:last-child {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.leaflet-bar a:first-child {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle {
+  width: 30px;
+  height: 30px;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+  border: 0;
+  font-size: 18px;
+}
+
+
+/**************************Tableau**************************/
+
+.dataTables_wrapper .dataTables_paginate {
+  color: #E06556;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  box-sizing: border-box;
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.5em 1em;
+  margin-left: 2px;
+  text-align: center;
+  text-decoration: none !important;
+  cursor: pointer;
+  *cursor: hand;
+  color: #E06556!important;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+table.dataTable tbody tr {
+  border: 1px solid black;
+}
+
+.dataTables_wrapper .dataTables_info{
+  color: #E06556;
+}
+
+#nbResult {
+  text-align: center;
+  color: #E06556;
+  font-weight: bold;
+  text-decoration: underline;
+  font-style: italic;
+}
+
+table.dataTable.row-border tbody td{
+  border-top: 1px solid #E06556;
+  cursor: pointer;
+}
+
+
+/**************************Image loading**************************/
+
+#img {
+  text-align: center;
+}
+
+#loading{
+  display: none;
+}
+
+#attente {
+  margin-top: 370px;
+}
+
+/**************************Export CSV**************************/
+
+#export_form {
+  border: solid 1px black;
+  height: 834px;
+  margin-bottom: 20px;
+}
+
+#tbl_csv_form{
+  height: 653px;
+  overflow-y: auto;
+}
+
+#tbl_csv_form , label {
+  color: #616161 !important;
+}
+
+#enteteCSV {
+  color: #616161;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#btnDownloadCSV {
+  display: block;
+  font-size: 14px;
+  margin-top: 31px;
+  background-color: #6997a6;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+  background-color: #fff;
+}
+
+#csv_all{
+  margin-right: 360px;
+}
+
+#btnExportCSV{
+  display: none;
+  margin-top: 20px;
+  float: left;
+}
+
+.all_check_csv [type="checkbox"].filled-in:not(:checked)+label:after {
+  height: 20px;
+  width: 20px;
+  background-color: transparent;
+  border: 2px solid #fff;
+  top: 0px;
+  z-index: 0;
+}
+
+.all_check_csv label {
+  background-color: #616161 !important;
+  color: #fff !important;
+}
+
+.all_check_csv {
+  background-color: #616161 !important;
+  color: #fff !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.all_check_arbre {
+  display: none;
+  background-color: #616161 !important;
+  color: #fff !important;
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+.all_check_arbre [type="checkbox"].filled-in:not(:checked)+label:after {
+  height: 20px;
+  width: 20px;
+  background-color: transparent;
+  border: 2px solid #fff;
+  top: 0px;
+  z-index: 0;
+}
+
+.all_check_arbre label {
+  background-color: #616161 !important;
+  color: #fff !important;
+}
+
+[type="checkbox"].filled-in:checked+label:after {
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #F8C45E;
+  background-color: #F8C45E;
+  z-index: 0;
+}

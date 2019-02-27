@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <!--Let browser know website is optimized for mobile-->
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Author -->
+  <meta name="author" content="Grégory Bocage">
+  <!--Import Google Icon Font-->
+  <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!--gijgo css-->
+  <link type="text/css" rel="stylesheet" href="js/library/gijgo/css/gijgo.min.css"  media="screen,projection"/>
+  <!-- Fontawesome -->
+  <link rel="stylesheet" type="text/css" href="js/library/fontawesome/css/font-awesome.min.css" />
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="js/library/materialize/css/materialize.min.css">
+  <!--Import dataTable.css-->
+  <link type="text/css" rel="stylesheet" href="js/library/DataTables/css/jquery.dataTables.min.css">
+  <!--Import leaflet.css et plugin-leaflet-->
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/leaflet-extramarkers/dist/css/leaflet.extra-markers.min.css">
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/Leaflet.markercluster-master/dist/MarkerCluster.css" />
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/Leaflet.markercluster-master/dist/MarkerCluster.Default.css" />
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/marker-naf/style.css">
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/leaflet.zoomhome-master/dist/leaflet.zoomhome.css"/>
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet-plugin/leaflet.fullscreen/dist/leaflet.fullscreen.css"/>
+  <link type="text/css" rel="stylesheet" href="js/library/leaflet/leaflet.css" />
+  <!--perso css-->
+  <link type="text/css" rel="stylesheet" href="css/geosirene.css"/>
+
+  <title>GéoSirène SOGEFI</title>
+
+</head>
+<body>
+  <div class="row entete">
+    <div class="input-field col l3 m3 s12">
+      <input id="insee" type="text" class="validate" placeholder="  une liste de codes insee est possible (ex: 82112, 82033, 82019)">
+      <label for="insee" class="colorLabel">Insee :</label>
+    </div>
+
+    <div class="input-field col l3 m3 s12">
+      <input id="departements" type="text" class="validate" placeholder="  une liste de codes de département est possible (ex: 31, 81, 82)">
+      <label for="departements" class="colorLabel">Départements :</label>
+    </div>
+
+    <div class="input-field col l3 m3 s12">
+      <input id="epci" type="text" class="validate" placeholder="  ex: 243100518">
+      <label for="epci" class="colorLabel">EPCI :</label>
+    </div>
+
+    <div class="input-field col l3 m3 s12">
+      <select id="tefet" name="tefet" >
+        <option value=""> Tout selectionner...</option>
+        <option value="00"> 0 salarié</option>
+        <option value="01"> 1 ou 2 salariés</option>
+        <option value="02"> 3 à 5 salariés</option>
+        <option value="03"> 6 à 9 salariés</option>
+        <option value="11"> 10 à 19 salariés</option>
+        <option value="12"> 20 à 49 salariés</option>
+        <option value="21"> 50 à 99 salariés</option>
+        <option value="22"> 100 à 199 salariés</option>
+        <option value="31"> 200 à 249 salariés</option>
+        <option value="32"> 250 à 499 salariés</option>
+        <option value="41"> 500 à 999 salariés</option>
+        <option value="42"> 1 000 à 1 999 salariés</option>
+        <option value="51"> 2 000 à 4 999 salariés</option>
+        <option value="52"> 5 000 à 9 999 salariés</option>
+        <option value="53"> 10 000 salariés et plus</option>
+      </select>
+      <label for="tefet" class="colorLabel">Salariés :</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <form class="col l5 m12 s12">
+      <div class="row checkBackground">
+        <div id="img"><img id="attente" src="img/attente.gif"></div>
+        <div class="input-field col s12 all_check_arbre">
+            <div class="row arbre_checkbox">
+              <div class="col l4">
+                <div id="arbre_all_div">
+                  <input type="checkbox" name="arbre_checkbox" class="filled-in" id="arbre_all">
+                  <label for="arbre_all">Tout sélectionner</label>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col s12" id="tree"></div>
+
+        <div class="input-field col s12 left-align groupeButton">
+          <div class="input-field col s6">
+            <a class="waves-effect waves-light btn z-depth-4 fullSize" id="clearButton">Réinitialiser <i class="material-icons">clear</i></a>
+          </div>
+          <div class="input-field col s6">
+            <a class="waves-effect waves-light btn z-depth-4 fullSize" id="buttonCartho">Cartographier <i class="material-icons">room</i></a>
+          </div>
+        </div>
+      </div>
+      <div id="export_form" hidden>
+        <div class="s12">
+          <p id="enteteCSV">Sélectionner les champs à extraire</p>
+          <div class="row all_check_csv">
+            <div class="col l4">
+              <div id="allSelectCSV"><input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_all" ><label for="csv_all">Tout sélectionner</label></div>
+            </div>
+          </div>
+          <div id="tbl_csv_form">
+            <div class="row">
+              <div class="col l4 m4 s6 ">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_actisurf">
+                <label for="csv_actisurf">actisurf</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_activite">
+                <label for="csv_activite">activite</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_activnat">
+                <label for="csv_activnat">activnat</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_adr_mail">
+                <label for="csv_adr_mail">adr_mail</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_amintren">
+                <label for="csv_amintren">amintren</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_amintret">
+                <label for="csv_amintret">amintret</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_apen700">
+                <label for="csv_apen700">apen700</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input   type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_apet700">
+                <label for="csv_apet700">apet700</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_aprm">
+                <label for="csv_aprm">aprm</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_arronet">
+                <label for="csv_arronet">arronet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_auxilt">
+                <label for="csv_auxilt">auxilt</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_categorie">
+                <label for="csv_categorie">categorie</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_cedex">
+                <label for="csv_cedex">cedex</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_civilite">
+                <label for="csv_civilite">civilite</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_code_classe">
+                <label for="filled-in-box">code_classe</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_code_division">
+                <label for="csv_code_classe">code_division</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_code_groupe">
+                <label for="csv_code_groupe">code_groupe</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_code_section">
+                <label for="csv_code_section">code_section</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_codpos">
+                <label for="csv_codpos">codpos</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_comet">
+                <label for="csv_comet">comet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_coordonnees">
+                <label for="csv_coordonnees">coordonnees</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_ctonet">
+                <label for="csv_ctonet">ctonet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_dapen">
+                <label for="csv_dapen">dapen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_dapet">
+                <label for="csv_dapet">dapet</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_dateess">
+                <label for="csv_dateess">dateess</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_datemaj">
+                <label for="csv_datemaj">datemaj</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_dcren">
+                <label for="csv_dcren">dcren</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_dcret">
+                <label for="csv_dcret">dcret</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_ddebact">
+                <label for="csv_ddebact">ddebact</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_defen">
+                <label for="csv_defen">defen</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_defet">
+                <label for="csv_defen">defet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_depcomen">
+                <label for="csv_depcomen">depcomen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_depcomet">
+                <label for="csv_depcomet">depcomet</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_depet">
+                <label for="csv_depet">depet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_diffcom">
+                <label for="csv_diffcom">diffcom</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox" class="filled-in" id="csv_du">
+                <label for="csv_du">du</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_efencent">
+                <label for="csv_efencent">efencent</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_efetcent">
+                <label for="csv_efetcent">efetcent</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_enseigne">
+                <label for="csv_enseigne">enseigne</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_epci">
+                <label for="csv_epci">epci</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esaann">
+                <label for="csv_esaann">esaann</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esaapen">
+                <label for="csv_esaapen">esaapen</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esasec1n">
+                <label for="csv_esasec1n">esasec1n</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esasec2n">
+                <label for="csv_esasec2n">esasec2n</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esasec3n">
+                <label for="csv_esasec3n">esasec3n</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_esasec4n">
+                <label for="csv_esasec4n">esasec4n</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_ess">
+                <label for="csv_ess">ess</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_ind_publipo">
+                <label for="csv_ind_publipo">ind_publipo</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_indrep">
+                <label for="csv_indrep">indrep</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_iriset">
+                <label for="csv_iriset">iriset</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l1_declaree">
+                <label for="csv_l1_declaree">l1_declaree</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l1_normalisee">
+                <label for="csv_l1_normalisee">l1_normalisee</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l2_declaree">
+                <label for="csv_l2_declaree">l2_declaree</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l2_normalisee">
+                <label for="csv_l2_normalisee">l2_normalisee</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l3_declaree">
+                <label for="csv_l3_declaree">l3_declaree</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l3_normalisee">
+                <label for="csv_l3_normalisee">l3_normalisee</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l4_declaree">
+                <label for="csv_l4_declaree">l4_declaree</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l4_normalisee">
+                <label for="csv_l4_normalisee">l4_normalisee</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l5_declaree">
+                <label for="csv_l5_declaree">l5_declaree</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l5_normalisee">
+                <label for="csv_l5_normalisee">l5_normalisee</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l6_declaree">
+                <label for="csv_l6_declaree">l6_declaree</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l6_normalisee">
+                <label for="csv_l6_normalisee">l6_normalisee</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l7_declaree">
+                <label for="csv_l7_declaree">l7_declaree</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_l7_normalisee">
+                <label for="csv_l7_normalisee">l7_normalisee</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libactisurf">
+                <label for="csv_libactisurf">libactisurf</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libactivnat">
+                <label for="csv_libactivnat">libactivnat</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libapen">
+                <label for="csv_libapen">libapen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libapet">
+                <label for="csv_libapet">libapet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libcom">
+                <label for="csv_libcom">libcom</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libesaapen">
+                <label for="csv_libesaapen">libesaapen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libessen">
+                <label for="csv_libessen">libessen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libmoden">
+                <label for="csv_libmoden">libmoden</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libmodet">
+                <label for="csv_libmodet">libmodet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libmonoact">
+                <label for="csv_libmonoact">libmonoact</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libnatetab">
+                <label for="csv_libnatetab">libnatetab</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libnj">
+                <label for="csv_libnj">libnj</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_liborigine">
+                <label for="csv_liborigine">liborigine</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libprodpart">
+                <label for="csv_libprodpart">libprodpart</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libreg_new">
+                <label for="csv_libreg_new">libreg_new</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libtca">
+                <label for="csv_libtca">libtca</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libtefen">
+                <label for="csv_libtefen">libtefen</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libtefet">
+                <label for="csv_libtefet">libtefet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libtu">
+                <label for="csv_libtu">libtu</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_libvoie">
+                <label for="csv_libvoie">libvoie</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_lieuact">
+                <label for="csv_lieuact">lieuact</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_moden">
+                <label for="csv_moden">moden</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_modet">
+                <label for="csv_modet">modet</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_monoact">
+                <label for="csv_monoact">monoact</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_natetab">
+                <label for="csv_natetab">natetab</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nic">
+                <label for="csv_nic">nic</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nicsiege">
+                <label for="csv_nicsiege">nicsiege</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nj">
+                <label for="csv_nj">nj</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nom">
+                <label for="csv_nom">nom</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nom_dept">
+                <label for="csv_nom_dept">nom_dept</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_nomen_long">
+                <label for="csv_nomen_long">nomen_long</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_numvoie">
+                <label for="csv_numvoie">numvoie</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_origine">
+                <label for="csv_origine">origine</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_prenom">
+                <label for="csv_prenom">prenom</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_proden">
+                <label for="csv_proden">proden</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_prodet">
+                <label for="csv_prodet">prodet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_prodpart">
+                <label for="csv_prodpart">prodpart</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_rna">
+                <label for="csv_rna">rna</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_rpen">
+                <label for="csv_rpen">rpen</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_rpet">
+                <label for="csv_rpet">rpet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_saisonat">
+                <label for="csv_saisonat">saisonat</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_section">
+                <label for="csv_section">section</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_siege">
+                <label for="csv_siege">siege</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_sigle">
+                <label for="csv_sigle">sigle</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_siren">
+                <label for="csv_siren">siren</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_siret">
+                <label for="csv_siret">siret</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_sous_classe">
+                <label for="csv_sous_classe">sous_classe</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tca">
+                <label for="csv_tca">tca</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tcd">
+                <label for="csv_tcd">tcd</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tefen">
+                <label for="csv_tefen">tefen</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tefet">
+                <label for="csv_tefet">tefet</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tel">
+                <label for="csv_tel">tel</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_tu">
+                <label for="csv_tu">tu</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_typvoie">
+                <label for="csv_typvoie">typvoie</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_uu">
+                <label for="csv_uu">uu</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_vmaj">
+                <label for="csv_vmaj">vmaj</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_vmaj1">
+                <label for="csv_vmaj1">vmaj1</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_vmaj2">
+                <label for="csv_vmaj2">vmaj2</label>
+              </div>
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_vmaj3">
+                <label for="csv_vmaj3">vmaj3</label>
+              </div>
+
+              <div class="col l4 m4 s6">
+                <input  type="checkbox" name="csv_checkbox"  class="filled-in" id="csv_zemet">
+                <label for="csv_zemet">zemet</label>
+              </div>
+            </div>
+
+
+          </div>
+          <a class="waves-effect waves-light btn z-depth-4" id="btnDownloadCSV">télécharger le csv <i class="material-icons">file_download</i></a>
+        </div>
+      </div>
+    </form>
+
+
+    <div class="col l7 m12 s12">
+      <div id="legende">
+        <div class="legIcone">
+          <p id="A">A   <i class=" icon_sirene NAF_A"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="B">B   <i class=" icon_sirene NAF_B"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="C">C   <i class=" icon_sirene NAF_C"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="D">D   <i class=" icon_sirene NAF_D"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="E">E   <i class=" icon_sirene NAF_E"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="F">F   <i class=" icon_sirene NAF_F"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="G">G   <i class=" icon_sirene NAF_G"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="H">H   <i class=" icon_sirene NAF_H"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="I">I   <i class=" icon_sirene NAF_I"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="J">J   <i class=" icon_sirene NAF_J"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="K">K   <i class=" icon_sirene NAF_K"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="L">L   <i class=" icon_sirene NAF_L"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="M">M   <i class=" icon_sirene NAF_M"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="N">N   <i class=" icon_sirene NAF_N"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="O">O   <i class=" icon_sirene NAF_O"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="P">P   <i class=" icon_sirene NAF_P"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="Q">Q   <i class=" icon_sirene NAF_Q"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="R">R   <i class=" icon_sirene NAF_R"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="S">S   <i class=" icon_sirene NAF_S"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="T">T   <i class=" icon_sirene NAF_T"></i></p>
+        </div>
+        <div class="legIcone">
+          <p id="U">U   <i class=" icon_sirene NAF_U"></i></p>
+        </div>
+      </div>
+
+      <div id="map">
+        <div id="img"><img id="attente" src="img/attente.gif"></div>
+      </div>
+      <div id="img"><img id="loading" src="img/textLoad.gif"></div>
+      &nbsp;
+      <div id="nbResult"></div>
+      <div id="div_html">
+      </div>
+      <div class="row">
+        <a class="waves-effect waves-light btn z-depth-4" id="clearButtonAfter">Réinitialiser <i class="material-icons">clear</i></a>
+        <a class="waves-effect waves-light btn z-depth-4" id="btnExportCSV">Export csv</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="js/library/jquery.min.js"></script>
+  <!--Import leaflet.js-->
+  <script type="text/javascript" src="js/library/leaflet/leaflet.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet-extramarkers/dist/js/leaflet.extra-markers.min.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/Leaflet.markercluster-master/src/markerClusterSrc.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet-easyPrint/dist/bundle.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet.zoomhome-master/dist/leaflet.zoomhome.min.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet.fullscreen/dist/leaflet.fullscreen.min.js"></script>
+  <!--Import gijgo.js-->
+  <script type="text/javascript" src="js/library/gijgo/js/gijgo.min.js"></script>
+  <!--Import materialize.js -->
+  <script type="text/javascript" src="js/library/materialize/js/materialize.min.js"></script>
+  <!--Import dataTable.js -->
+  <script type="text/javascript" src="js/library/DataTables/js/jquery.dataTables.min.js"></script>
+  <!--Import perso js-->
+  <script type="text/javascript" src="js/geosirene.js"></script>
+</body>
+</html>
