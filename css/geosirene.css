@@ -1,3 +1,12 @@
+/**************************Police**************************/
+body, html {
+  font-family: 'Titillium Web', sans-serif !important;
+}
+ul.gj-list-md li  {
+  font-family: 'Titillium Web', sans-serif !important;
+}
+
+
 /**************************bordur**************************/
 
 #map, .checkBackground {

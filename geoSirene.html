@@ -7,6 +7,7 @@
   <meta name="author" content="Grégory Bocage">
   <!--Import Google Icon Font-->
   <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons|Titillium+Web:400,600,700,900">
   <!--gijgo css-->
   <link type="text/css" rel="stylesheet" href="js/library/gijgo/css/gijgo.min.css"  media="screen,projection"/>
   <!-- Fontawesome -->
@@ -74,14 +75,14 @@
       <div class="row checkBackground">
         <div id="img"><img id="attente" src="img/attente.gif"></div>
         <div class="input-field col s12 all_check_arbre">
-            <div class="row arbre_checkbox">
-              <div class="col l4">
-                <div id="arbre_all_div">
-                  <input type="checkbox" name="arbre_checkbox" class="filled-in" id="arbre_all">
-                  <label for="arbre_all">Tout sélectionner</label>
-                </div>
+          <div class="row arbre_checkbox">
+            <div class="col l4">
+              <div id="arbre_all_div">
+                <input type="checkbox" name="arbre_checkbox" class="filled-in" id="arbre_all">
+                <label for="arbre_all">Tout sélectionner</label>
               </div>
             </div>
+          </div>
         </div>
         <div class="col s12" id="tree"></div>
 
@@ -650,7 +651,6 @@
       </div>
     </form>
 
-
     <div class="col l7 m12 s12">
       <div id="legende">
         <div class="legIcone">
@@ -729,6 +729,7 @@
       <div class="row">
         <a class="waves-effect waves-light btn z-depth-4" id="clearButtonAfter">Réinitialiser <i class="material-icons">clear</i></a>
         <a class="waves-effect waves-light btn z-depth-4" id="btnExportCSV">Export csv</a>
+        <a class="waves-effect waves-light btn z-depth-4" id="btnExportPDF">Export pdf</a>
       </div>
     </div>
   </div>
@@ -736,13 +737,18 @@
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="js/library/jquery.min.js"></script>
+  <script type="text/javascript" src="js/base64/logo_geosirene_base64.js"></script>
+
   <!--Import leaflet.js-->
   <script type="text/javascript" src="js/library/leaflet/leaflet.js"></script>
   <script type="text/javascript" src="js/library/leaflet-plugin/leaflet-extramarkers/dist/js/leaflet.extra-markers.min.js"></script>
   <script type="text/javascript" src="js/library/leaflet-plugin/Leaflet.markercluster-master/src/markerClusterSrc.js"></script>
-  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet-easyPrint/dist/bundle.js"></script>
   <script type="text/javascript" src="js/library/leaflet-plugin/leaflet.zoomhome-master/dist/leaflet.zoomhome.min.js"></script>
   <script type="text/javascript" src="js/library/leaflet-plugin/leaflet.fullscreen/dist/leaflet.fullscreen.min.js"></script>
+  <script type="text/javascript" src="js/library/leaflet-plugin/leaflet-easyprint/dist/bundle_sogefi.js"></script>
+  <!-- Import jsPdf et autotable -->
+  <script type="text/javascript" src="js/library/jspdf/dist/jspdf.min.js"></script>
+  <script type="text/javascript" src="js/library/jspdf_autotable/dist/jspdf.plugin.autotable.min.js"></script>
   <!--Import gijgo.js-->
   <script type="text/javascript" src="js/library/gijgo/js/gijgo.min.js"></script>
   <!--Import materialize.js -->

@@ -14,6 +14,7 @@ var popup;
 var latitude, longitude;
 var marker;
 var streets, grayscale, satellite;
+var mapBase64;
 
 //------------Requète-------------//
 var flag_all_selected = 0;
@@ -24,6 +25,8 @@ var treenaf;
 var tree;
 var node;
 var tree_to_apet700 = new Array();
+var code_section_pdf = new Array();
+var printerForPDF;
 var treenaf_all = [
   {
     "code": "A",
@@ -9045,6 +9048,7 @@ $(document).ready(function() {
   clearButtonAfterExport();
   bindRequest();
   bindClickAllRequest();
+  bindClickPdf();
   bindClickCheked();
   bindClickBtnExportCSV();
   bindClickAllSelectExport();
@@ -9091,27 +9095,21 @@ function initMap() {
     position :'topright'
   }).addTo(map);
 
-  var png = L.easyPrint({
-    title: 'Png',
-    position: 'topright',
-    sizeModes: ['A4Portrait', 'A4Landscape'],
-    defaultSizeTitles: {A4Landscape:'A4 Paysage', A4Portrait:'A4 Portrait'},
-    exportOnly :true
-  }).addTo(map);
-
-  var print = L.easyPrint({
-    title: 'Imprimer',
-    position: 'topright',
-    spinnerBgColor: '#F8C45D',
-    sizeModes: ['A4Portrait', 'A4Landscape'],
-    defaultSizeTitles: {A4Landscape:'A4 Paysage', A4Portrait:'A4 Portrait'}
+    printerForPDF = L.easyPrint({
+    hidden: true,
+    tileWait: 20000,
+    tileLayer: streets,
+    sizeModes: ['Current'],
+    filename: 'fichie_voie',
+    exportOnly: true,
+    hideControlContainer: true
   }).addTo(map);
 
   map.addControl(new L.Control.Fullscreen({
     position: 'topright',
     title: {
-        'false': 'Plein ecran',
-        'true': 'Quitter plein ecran'
+      'false': 'Plein ecran',
+      'true': 'Quitter plein ecran'
     }
   }));
 
@@ -9186,10 +9184,15 @@ function bindClickCheked(){
       alert('Merci de cocher au moins un élément...')
       $('#btnExportCSV').hide();
       $('#loading').hide();
-
     });
-
   }
+}
+
+
+function bindClickPdf(){
+  $('#btnExportPDF').on('click', function(){
+    printerForPDF.printMap('CurrentSize', 'MT_voirie');
+  })
 }
 
 
@@ -9283,7 +9286,6 @@ if(epci){
 }).join(' OR ')+")";
 }
 })(parameters.insee, parameters.departements, parameters.epci));
-// console.log(parameters);
 return false;
 }
 
@@ -9297,6 +9299,9 @@ function prepareUrlQueue(tefet, apet700List, where, apet700GroupLength, callback
   $.each(tree.getCheckedNodes(), function(index, value) {
     if (value.length == 5) {
       tree_to_apet700.push(value);
+    }
+    if (value.length == 1) {
+      code_section_pdf.push(value);
     }
   });
 
@@ -9313,7 +9318,6 @@ function prepareUrlQueue(tefet, apet700List, where, apet700GroupLength, callback
     start_slice += apet700GroupLength;  // ajpute les series de 30 apet700 (0,30,60...)
     acrr_apet700 += apet700GroupLength;  // ajoute 30 a la valeur apet700GroupLength  (valeur de fin )
   }
-  // console.log(urls);
   callback(urls);
 }
 
@@ -9323,8 +9327,6 @@ function importData(parameters){
     prepareUrlQueue(parameters.tefet, parameters.apet700, where, parameters.apet700GroupLength, function(urls){
 
       urls.forEach(function (url) {
-        // console.log('URL:');
-        // console.log(url);
         request(url);
       });
     });
@@ -9344,7 +9346,6 @@ function request(url){
       var nbResult = e.responseJSON['total_count'];
       var records = e.responseJSON['records'];
       var links = e.responseJSON['links'];
-      // console.log(e.responseJSON['records']);
 
       var total_count = e.responseJSON['records'];
       if (total_count == 0) {
@@ -9370,7 +9371,6 @@ function request(url){
       // manage records in first request
       $.each(records, function(index, value) {
         var etab = value['record']['fields'];
-        // console.log('et la Request ?????');
         if (etab['coordonnees'] != null) {
           popup = etab['l1_normalisee'];
           latitude = etab['coordonnees']['lat'];
@@ -9417,8 +9417,6 @@ function nextRequest(url) {
 
       var records = e.responseJSON['records'];
       var links = e.responseJSON['links'];
-      // console.log(e.responseJSON['records']);
-
       // manage link next -- if not end of process
       $.each(links, function(index, value) {
         if (value['rel'] == 'next') {
@@ -9471,7 +9469,7 @@ function nextRequest(url) {
 //------------------------------------------------------------------------------------------------//
 
 function endOfRequest() {
-  // console.log('fini !!!');
+
   setTimeout(function(){ if(flagEnd >= 0){
     $('#tbl_result').DataTable({
       destroy : true,
@@ -9495,10 +9493,12 @@ function endOfRequest() {
 map.fitBounds(markers.getBounds());
 markers.addTo(map);
 $('#btnExportCSV').show();
+$('#btnExportPDF').show();
 flagEnd = 1;
 $('#div_html').show();
 $('#legende').show();
 }
+
 
 function findInMapMarkerBySiret(siret) {
   markers.eachLayer(function (layer) {
@@ -9515,6 +9515,7 @@ function findInMapMarkerBySiret(siret) {
     }
   });
 }
+
 
 function getColorNaf(marker, section_code) {
   var codeNaf = section_code;
@@ -9693,7 +9694,7 @@ function getColorNaf(marker, section_code) {
 
 
 //------------------------------------------------------------------------------------------------//
-//----------------------------------------Code export CSV-----------------------------------------//
+//-------------------------------------Code export CSV et PDF-------------------------------------//
 //------------------------------------------------------------------------------------------------//
 
 function JSONToCSVConvertor(JSONData){ // JsonData - spécifie le Json à télécharger,
@@ -9782,6 +9783,129 @@ document.body.removeChild(link);
 
 }
 
+
+function printFichePdf(img64){
+// console.log(img64);
+  setTimeout(function() {
+    var date = new Date();
+    var doc = new jsPDF('l', 'pt');
+
+    // Tableau
+    var columns = [
+      {title: "NOM", dataKey: "nom"},
+      {title: "Activité", dataKey: "activite"},
+      {title: "Code Postal", dataKey: "codePostal"},
+    ];
+    var rows = new Array();
+    $.each(etabArray,  function(index, value) {
+      var lineData = {
+        "nom": value['l1_normalisee'],
+        "activite": value['libapen'],
+        "codePostal": value['codpos']
+      };
+      rows.push(lineData);
+    });
+    var totalPagesExp = "{total_pages_count_string}";
+    doc.autoTable(columns, rows, {
+      styles: {
+        cellPadding: 12,
+        fontSize: 8,
+        columnWidth: 'auto',
+      },
+      headerStyles: {
+        fillColor: [106, 151, 166]
+      },
+      margin: {
+        top: 155
+      },
+      addPageContent: function(data) {
+        console.log(data);
+        doc.setFontSize(15);
+        doc.setTextColor(106, 151, 166);
+        doc.setFontStyle('normal');
+        doc.text("Tableau des résultats Géosirene", 320, 75);
+        doc.setFontSize(12);
+        doc.setTextColor(0);
+        doc.setFontStyle('normal');
+
+        var height = doc.internal.pageSize.height;
+        var width = doc.internal.pageSize.width;
+
+        var str = data.pageCount;
+        if (typeof doc.putTotalPages === 'function') {
+          str = str + " / " + totalPagesExp;
+        }
+        doc.setFontSize(10);
+        doc.text(str, width-50, height-20);
+        doc.text(date.ddmmyyyy(), data.settings.margin.left, height-20);
+        if (logo_geosirene_base64) {
+          doc.addImage(logo_geosirene_base64, 'PNG', data.settings.margin.left, 30, 40, 50);
+        }
+      }
+    });
+    doc.putTotalPages(totalPagesExp);
+
+    doc.addPage();
+    // Carte
+    doc.addImage(logo_geosirene_base64, 'PNG', 40, 30, 40, 50);
+    doc.setFontSize(15);
+    doc.setTextColor(106, 151, 166);
+    doc.text(340, 75, 'Export carte Géosirene PDF');
+    doc.addImage(img64, 'PNG', 110, 120, 700, 450);
+    doc.setTextColor(0);
+    doc.setFontSize(10);
+    doc.text("Géosirene", 750, 575);
+    doc.text(date.ddmmyyyy(), 40, 575);
+
+    // Code section et commentaire
+    doc.addPage();
+    doc.addImage(logo_geosirene_base64, 'PNG', 40, 30, 40, 50);
+    doc.setFontSize(15);
+    doc.setTextColor(106, 151, 166);
+    doc.text(350, 75, 'Export Géosirene PDF');
+    var x_code_section = 150;
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+
+    $.each(code_section_pdf, function(index, value) {
+      console.log(value);
+      var code_section = value;
+      var splitTitle = doc.splitTextToSize('Code section : '+'['+code_section+']', 145);
+      doc.text(40, x_code_section, splitTitle);
+      x_code_section += 20;
+    });
+      doc.rect(495, 120, 300, 300);
+      doc.setFontSize(10);
+      doc.text("COMMENTAIRES", 605, 145);
+
+      doc.text("Géosirene", 750, 575);
+      doc.text(date.ddmmyyyy(), 40, 575);
+
+      var fileName = "Export_PDF_Résultats_Géosirene_"+date.yyyymmdd();
+      doc.save(fileName+'.pdf');
+  });
+}
+
+
+Date.prototype.ddmmyyyy = function(){
+  var mois = this.getMonth() + 1;
+  // Attention 0 correspond au mois de Janvier et 11 au mois de Décembre. Donc pour afficher le mois, il faut ajouter 1 au retour de getMonth()
+  // Il te retourne 1 - 2 - 3 ... 12 ==> En français on veux 01
+  // On rajoute un 0 devant
+  if (mois < 10) {
+    mois = '0'+mois;
+  }
+  var jour = this.getDate();
+  // On rajoute un 0 devant
+  if (jour < 10) {
+    jour = '0'+jour;
+  }
+  var annee = this.getFullYear();
+
+  var ma_date = jour + '/' + mois + '/' + annee;
+
+  return ma_date;
+};
 Date.prototype.yyyymmdd = function(){
   var mm = this.getMonth() + 1;  // Attention 0 correspond au mois de Janvier et 11 au mois de Décembre. Donc pour afficher le mois, il faut ajouter 1 au retour de getMonth()
   var dd = this.getDate();
